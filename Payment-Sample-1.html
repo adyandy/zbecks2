@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<!--html buy button code-->
+<div class="col-lg-12">
+            <script type="text/javascript" src="https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js"></script>
+            <button class="btn btn-sm btn-warning btn-pay btn-block" onclick="payWithRave()" type="button" style="display:none">Buy</button>
+        </div>
+    </head>
+<!--javascript-->
+<script>
+    const API_publicKey = "FLWPUBK-31d666bb6463ceae9675aa8f539d38cb-X";
+
+    function makeid(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+
+    function payWithRave() {
+        var x = getpaidSetup({
+            PBFPubKey: API_publicKey,
+            customer_email: "",//customer_email
+            amount: '',//amount from database
+            customer_phone: "",//customer_phone_numberr
+            currency: "ZMW",
+            custom_title: "",//product /website title
+            custom_description: "Don't Close Broswer Before You Save Your Ticket Number and Ticket",//Custom message
+            custom_logo: "https://wintts.hostingerapp.com/assets/images/ticket-logo-138x128.png",//logo Custom
+            customer_firstname: "",//customer_firstname
+            customer_lastname: "",//customer_lastname
+            payment_options: "card,ussd",
+            txref: makeid(10),//transaction referrence random
+            meta: [{
+                metaname: "",
+                /*here you can define extra data about product or cutomer*/
+                metavalue: ""
+            }],
+            onclose: function() {},
+            callback: function(response) {
+                var txref = response.data.txRef; // collect txRef returned and pass to a server page to complete status check.
+                console.log("This is the response returned after a charge", response);
+                if (response.data.chargeResponseCode == "00" || response.data.chargeResponseCode == "0") {
+
+                    window.location.replace("done_page.php?txref=" + txref);//redirect to success page for verification
+
+                } else {
+
+                    window.location.replace("");//redirect to error page
+                }
+
+                x.close(); // use this to close the modal immediately after payment.
+            }
+        });
+    }
+                                   </script>
+
+
+                   
